@@ -1,20 +1,5 @@
-/*  This file is part of the Pinocchio automatic rigging library.
-    Copyright (C) 2007 Ilya Baran (ibaran@mit.edu)
+//矢量类按维度进行参数化
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
 #define _SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS 1
 #ifndef VECTOR_H_INCLUDED
 #define VECTOR_H_INCLUDED
@@ -31,14 +16,18 @@ using namespace std;
 namespace _VectorPrivate {
 template <int Dim> class VecOp;
 }
-
+//=========矢量类=============//
+//数值类型Real，数据个数Dim个
 template <class Real, int Dim>
 class Vector
 {
 public:
+	//Self：Vector别名
     typedef Vector<Real, Dim> Self;
+	//VO：VecOp别名
     typedef _VectorPrivate::VecOp<Dim> VO;
 
+	//构造函数
     Vector() { VO::assign(Real(), *this); }
     Vector(const Self &other) { VO::assign(other, *this); }
     explicit Vector(const Real &m) { VO::assign(m, *this); }
@@ -46,10 +35,12 @@ public:
     Vector(const Real &m1, const Real &m2, const Real &m3) { m[0] = m1; m[1] = m2; m[2] = m3; checkDim<3>(VO()); }
     template<class R> Vector(const Vector<R, Dim> &other) { VO::assign(other, *this); }
 
+	//operator函数：检索下标为 n 的数据成员
     Real &operator[](int n) { return m[n]; }
     const Real &operator[](int n) const { return m[n]; }
 
-//basic recursive functions
+
+	//基本递归函数
     template<class F> Vector<typename F::result_type, Dim> apply(const F &func) const
     { return VO::apply(func, *this); }
 
@@ -64,7 +55,8 @@ public:
     typename Accum::result_type accumulate(const Op &op, const Accum &accum, const Self &other) const
     { return VO::accumulate(op, accum, *this, other); }
 
-//operators
+
+	//操作函数
     Real operator*(const Self &other) const { return accumulate(multiplies<Real>(), plus<Real>(), other); }
     Self operator+(const Self &other) const { return apply(plus<Real>(), other); }
     Self operator-(const Self &other) const { return apply(minus<Real>(), other); }
@@ -82,7 +74,7 @@ public:
 
     Real lengthsq() const { return (*this) * (*this); }
     Real length() const { return sqrt(lengthsq()); }
-
+	//归一化
     Self normalize() const { return (*this) / length(); }
 
     int size() const { return Dim; }
@@ -303,7 +295,7 @@ private:
 };
 } //namespace _VectorPrivate
 
-//BitComparator is a utility class that helps with rectangle and dtree indices
+//BitComparator是一个工具类，可以帮助矩形和dtree索引
 template<int Dim> class BitComparator
 {
 public:

@@ -22,8 +22,9 @@ public:
 
 /**
 * Represents a symmetric positive definite (spd) matrix -- 
-* primary intended use is inside LSQSystem (because it's symmetric, only the lower triangle
-* is stored)
+* 代表对称正定（spd）矩阵 -
+* primary intended use is inside LSQSystem (because it's symmetric, only the lower triangleis stored)
+* 主要用途在LSQSystem内部（因为它是对称的，只有下面的三角形被存储）
 */
 class SPDMatrix
 {
@@ -62,6 +63,7 @@ public:
     LSQSystem() : factoredMatrix(NULL) {}
     ~LSQSystem() { if(factoredMatrix) delete factoredMatrix; }
 
+	//增加约束
     void addConstraint(bool hard, const map<V, double> &lhs, const C &id)
     {
         constraints[make_pair(id, -1)] = Constraint(hard, lhs);
@@ -71,6 +73,7 @@ public:
     {
         constraints[make_pair(C(), (int)constraints.size())] = Constraint(hard, lhs, rhs);
     }
+
 
     void setRhs(const C &id, double rhs)
     {
@@ -95,6 +98,7 @@ public:
         //The way to make it prettier (should this become necessary) is to
         //make structures for the different types of indices (instead of using ints and pairs)
         //also put hard constraints in front rather than at the end.
+
 
         //init
         varIds.clear();

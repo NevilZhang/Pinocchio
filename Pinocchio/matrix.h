@@ -292,3 +292,4 @@ inline ostream &operator<<(ostream &os, const Matrixn<Real> &m)
 }
 
 #endif //MATRIX_H_INCLUDED
+ 

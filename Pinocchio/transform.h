@@ -1,37 +1,20 @@
-/*  This file is part of the Pinocchio automatic rigging library.
-    Copyright (C) 2007 Ilya Baran (ibaran@mit.edu)
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
-
+//四元数rotate-translate-scale变换
 #ifndef TRANSFORM_H
 #define TRANSFORM_H
 
 #include "vector.h"
 
 template<class Real = double>
-class Quaternion //normalized quaternion for representing rotations
+class Quaternion //用于表示旋转的归一化四元数
 {
 public:
     //constructors
     Quaternion() : r(1.) { } //initialize to identity
-    Quaternion(const Quaternion &q) : r(q.r), v(q.v) {} //copy constructor
-    template<class R> Quaternion(const Quaternion<R> &q) : r(q.r), v(q.v) {} //convert quaternions of other types
-    //axis angle constructor:
+    Quaternion(const Quaternion &q) : r(q.r), v(q.v) {} //拷贝构造器
+    template<class R> Quaternion(const Quaternion<R> &q) : r(q.r), v(q.v) {} //c转换其他类型的四元数
+    //轴角度构造器
     template<class R> Quaternion(const Vector<R, 3> &axis, const R &angle) : r(cos(angle * Real(0.5))), v(sin(angle * Real(0.5)) * axis.normalize()) {}
-    //minimum rotation constructor:
+    //最小旋转构造函数
     template<class R> Quaternion(const Vector<R, 3> &from, const Vector<R, 3> &to) : r(1.)
     {
         R fromLenSq = from.lengthsq(), toLenSq = to.lengthsq();
@@ -53,10 +36,10 @@ public:
         }
     }
 
-    //quaternion multiplication
+    //四元数乘法
     Quaternion operator*(const Quaternion &q) const { return Quaternion(r * q.r - v * q.v, r * q.v + q.r * v + v % q.v); }
     
-    //transforming a vector
+    //转换矢量
     Vector<Real, 3> operator*(const Vector<Real, 3> &p) const
     {
         Vector<Real, 3> v2 = v + v;
@@ -73,13 +56,15 @@ public:
     {
         return (r == oth.r && v == oth.v) || (r == -oth.r && v == -oth.v);
     }
-    
+    //逆
     Quaternion inverse() const { return Quaternion(-r, v); }
     
     Real getAngle() const { return Real(2.) * atan2(v.length(), r); }
+	//获取轴
     Vector<Real, 3> getAxis() const { return v.normalize(); }
     
     const Real &operator[](int i) const { return (i == 0) ? r : v[i - 1]; }
+
     void set(const Real &inR, const Vector<Real, 3> &inV) {
         Real ratio = Real(1.) / sqrt(inR * inR + inV.lengthsq()); 
         r = inR * ratio; v = inV * ratio; //normalize
@@ -163,14 +148,14 @@ public:
         return Self((*this) * Vec(o[0], o[3], o[6]), (*this) * Vec(o[1], o[4], o[7]), (*this) * Vec(o[2], o[5], o[8]));
     }
     
-    Self operator~() const { //transpose
-        Self out(S(0)); //uninitialized
+    Self operator~() const { //颠倒
+        Self out(S(0)); //未初始化
         out[0] = m[0]; out[4] = m[4]; out[8] = m[8];
         out[1] = m[3]; out[3] = m[1]; out[2] = m[6]; out[6] = m[2]; out[5] = m[7]; out[7] = m[5];
         return out;
     }
     
-    Self operator!() const { //invert
+    Self operator!() const { //倒置
         Self out(S(0));
         Real d = det();
         if(d == Real())

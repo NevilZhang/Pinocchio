@@ -1,20 +1,3 @@
-/*  This file is part of the Pinocchio automatic rigging library.
-    Copyright (C) 2007 Ilya Baran (ibaran@mit.edu)
-
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
-
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
-
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
 
 #include "mesh.h"
 #include "hashutils.h"
@@ -26,25 +9,29 @@
 #include <set>
 #include <algorithm>
 
+
+//Mesh 初始化，并计算好face 和法线
 Mesh::Mesh(const string &file)
     : scale(1.)
 {
     int i;
-#define OUT { vertices.clear(); edges.clear(); return; }
+	#define OUT { vertices.clear(); edges.clear(); return; }
+	//obj文件流
     ifstream obj(file.c_str());
     
+	//校验打开成功与否
     if(!obj.is_open()) {
         Debugging::out() << "Error opening file " << file << endl;
         return;
     }
-    
+
     Debugging::out() << "Reading " << file << endl;
     
     if(file.length() < 4) {
         Debugging::out() << "I don't know what kind of file it is" << endl;
         return;
     }
-    
+    //判断 模型格式类型，并采用不同的读取函数
     if(string(file.end() - 4, file.end()) == string(".obj"))
         readObj(obj);
     else if(string(file.end() - 4, file.end()) == string(".ply"))
@@ -60,13 +47,14 @@ Mesh::Mesh(const string &file)
         return;
     }
     
-    //reconstruct the rest of the information
+    //重建其余的信息
     int verts = vertices.size();
     
     if(verts == 0)
         return;
-    
-    for(i = 0; i < (int)edges.size(); ++i) { //make sure all vertex indices are valid
+
+    //make sure all vertex indices are valid	确保所有的顶点索引都是有效的
+    for(i = 0; i < (int)edges.size(); ++i) { 
         if(edges[i].vertex < 0 || edges[i].vertex >= verts) {
             Debugging::out() << "Error: invalid vertex index " << edges[i].vertex << endl;
             OUT;
@@ -96,7 +84,7 @@ void Mesh::computeTopology()
         int v1 = edges[i].vertex;
         int v2 = edges[edges[i].prev].vertex;
 
-        vertices[v1].edge = edges[edges[i].prev].prev; //assign the vertex' edge
+        vertices[v1].edge = edges[edges[i].prev].prev; //assign the vertex' edge 分配顶点的边缘
         
         if(halfEdgeMap[v1].count(v2)) {
             Debugging::out() << "Error: duplicate edge detected: " << v1 << " to " << v2 << endl;
@@ -111,6 +99,7 @@ void Mesh::computeTopology()
     }
 }
 
+//计算顶点法线
 void Mesh::computeVertexNormals()
 {
     int i;

@@ -39,10 +39,15 @@ private:
     vector<Transform<> > computeTransforms() const;
     void updateMesh() const;
 
+	//初始骨架
     Skeleton origSkel;
+	//匹配
     vector<Vector3> match;
+	//
     Attachment attachment;
+	//初始网格
     Mesh origMesh;
+	//当前网格
     mutable Mesh curMesh;
     vector<Quaternion<> > transforms;
     Motion *motion;

@@ -22,6 +22,8 @@ public:
     template<class R> Rect(const Rect<R, Dim> &inRect) : empty(inRect.empty), lo(inRect.lo), hi(inRect.hi) {}
     
     //constructs a Rect given an iterator over points--could be optimized with a min-max
+	//构造一个Rect，它被赋予一个遍历点的迭代器 - 可以使用min-max进行优化
+	//取start和finish之间最小值给lo，最大值给hi
     template<class Iter> Rect(Iter start, const Iter &finish) : empty(false)
     {
         if(start == finish) {

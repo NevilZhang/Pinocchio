@@ -27,12 +27,12 @@ struct PinocchioOutput
 {
     PinocchioOutput() : attachment(NULL) {}
 
-    vector<Vector3> embedding;
-    Attachment *attachment; //user responsible for deletion
+    vector<Vector3> embedding; //嵌入骨架
+    Attachment *attachment; //user responsible for deletion	用户负责删除
 };
 
-//calls the other functions and does the whole rigging process
-//see the implementation of this function to find out how to use the individual functions
+//calls the other functions and does the whole rigging process	调用其他功能并执行整个索具过程
+//see the implementation of this function to find out how to use the individual functions 请参阅此功能的实现以了解如何使用各个功能
 PinocchioOutput PINOCCHIO_API autorig(const Skeleton &given, const Mesh &m);
 
 //============================================individual steps=====================================

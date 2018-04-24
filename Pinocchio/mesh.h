@@ -20,7 +20,7 @@ struct MeshEdge
 {
     MeshEdge() : vertex(-1), prev(-1), twin(-1) {}
     
-    int vertex; //the vertex the edge points to--the start vertex is prev->vertex
+    int vertex; //边指向的顶点 - 起始顶点是prev->顶点
     int prev; //ccw, next is prev->prev
     int twin;
 };
@@ -31,7 +31,7 @@ public:
     Mesh(const string &file);
 
     bool integrityCheck() const;
-    bool isConnected() const; //returns true if the mesh consists of a single connected component
+    bool isConnected() const; //如果网格由单个连接的组件组成，则返回true
     void computeVertexNormals();
     void normalizeBoundingBox();
     void computeTopology();
@@ -47,7 +47,9 @@ private:
     void sortEdges(); //sort edges so that triplets forming faces are adjacent
 
 public: //data
+	//Mesh 顶点集合
     vector<MeshVertex> vertices;
+	//Mesh 边集合
     vector<MeshEdge> edges; //halfEdges, really
 
     Vector3 toAdd;

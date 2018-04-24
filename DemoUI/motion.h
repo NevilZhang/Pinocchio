@@ -29,5 +29,4 @@ private:
     double legWidth;
     int fixedFrame;
 };
-
 #endif

@@ -57,22 +57,22 @@ protected:
     
 private:
      //full
-    PtGraph fGraphV;
-    vector<int> fPrevV; //previous vertices
-    vector<int> fSymV; //symmetry
+    PtGraph fGraphV;    //节点和边
+    vector<int> fPrevV; //previous vertices先前的顶点
+    vector<int> fSymV; //symmetry对称
     
     //compressed (no degree 2 vertices)
     PtGraph cGraphV; 
     vector<int> cPrevV; //previous vertices
     vector<int> cSymV; //symmetry
-    vector<bool> cFeetV; //whether the vertex should be near the ground
-    vector<bool> cFatV; //whether the vertex should be in a large region
+    vector<bool> cFeetV; //whether the vertex should be near the ground顶点是否应该靠近地面
+    vector<bool> cFatV; //whether the vertex should be in a large region顶点是否应该位于大的区域
     
-    vector<int> cfMapV; //compressed to full map
-    vector<int> fcMapV; //full to compressed map, -1 when vertex is not in compressed
-    vector<double> fcFractionV; //maps full vertex number to ratio of its prev edge length to total length of
-                                //containing edge in the compressed graph
-    vector<double> cLengthV; //lengths of the compressed bones
+    vector<int> cfMapV; //compressed to full map压缩到完整的地图
+    vector<int> fcMapV; //full to compressed map, -1 when vertex is not in compressed当顶点没有被压缩时
+    vector<double> fcFractionV; //maps full vertex number to ratio of its prev edge length to total length of将完整顶点数映射到其先前边长与总长度之比
+                                //containing edge in the compressed graph在压缩图中包含边缘
+    vector<double> cLengthV; //lengths of the compressed bones压缩的骨头的长度
 };
 
 class PINOCCHIO_API HumanSkeleton : public Skeleton

@@ -132,11 +132,11 @@ void Skeleton::setFat(const string &name)
     cFatV[fcMapV[i]] = true;
 }
 
-//-----------------actual skeletons-------------------
+//-----------------actual skeletons  实际骨骼-------------------
 
 HumanSkeleton::HumanSkeleton()
 {
-    //order of makeJoint calls is very important
+    //order of makeJoint calls is very important	按顺序声明生成节点是非常重要的
     makeJoint("shoulders",  Vector3(0., 0.5, 0.));                          //0
     makeJoint("back",       Vector3(0., 0.15, 0.),      "shoulders");       //1
     makeJoint("hips",       Vector3(0., 0., 0.),        "back");            //2
@@ -160,7 +160,7 @@ HumanSkeleton::HumanSkeleton()
     makeJoint("relbow",     Vector3(0.4, 0.25, 0.075),  "rshoulder");       //16
     makeJoint("rhand",      Vector3(0.6, 0.0, 0.15),    "relbow");          //17
     
-    //symmetry
+    //对称
     makeSymmetric("lthigh", "rthigh");
     makeSymmetric("lknee", "rknee");
     makeSymmetric("lankle", "rankle");
